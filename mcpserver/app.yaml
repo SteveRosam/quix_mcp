@@ -1,0 +1,6 @@
+name: MCPServer
+language: python
+dockerfile: dockerfile
+runEntryPoint: main.py
+defaultFile: main.py
+libraryItemId: http-api-sample
