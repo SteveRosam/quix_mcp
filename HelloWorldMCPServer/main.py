@@ -13,5 +13,5 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             print(f"Connected by {addr}")
             data = conn.recv(1024)
             if data:
-                response = b'Hello World\n'
+                response = b'Hello World waa waa\n'
                 conn.sendall(response)
