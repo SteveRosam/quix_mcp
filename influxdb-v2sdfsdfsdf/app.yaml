@@ -1,0 +1,21 @@
+name: InfluxDB v2sdfsdfsdf
+language: docker
+variables:
+  - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+    inputType: Secret
+    description: Default Admin Token to initialize Influx with
+    defaultValue: INFLUX_ADMIN_TOKEN
+    required: true
+  - name: DOCKER_INFLUXDB_INIT_PASSWORD
+    inputType: Secret
+    description: Default Admin password to initialize Influx with
+    defaultValue: ADMIN_PASSWORD
+    required: true
+  - name: DOCKER_INFLUXDB_INIT_BUCKET
+    inputType: FreeText
+    description: Bucket Name to initialize Influx with
+    defaultValue: demo
+    required: true
+dockerfile: dockerfile
+defaultFile: dockerfile
+libraryItemId: influxdb2
