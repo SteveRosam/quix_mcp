@@ -32,7 +32,7 @@ variables:
     inputType: FreeText
     multiline: false
     description: Bucket name in InfluxDB where data is stored.
-    defaultValue: quix
+    defaultValue: demo
     required: true
   - name: INFLUXDB_MEASUREMENT_NAME
     inputType: FreeText
