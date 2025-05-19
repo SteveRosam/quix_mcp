@@ -27,7 +27,7 @@ serializer = JSONSerializer()
 # Define the topic using the "output" environment variable
 topic_name = os.environ["output"]
 topic = app.topic(topic_name)
-
+print(os.environ["INFLUXDB_TOKEN"])
 influxdb2_client = influxdb_client.InfluxDBClient(token=os.environ["INFLUXDB_TOKEN"],
                         org=os.environ["INFLUXDB_ORG"],
                         url=os.environ['INFLUXDB_HOST'])
