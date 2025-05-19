@@ -21,7 +21,7 @@ variables:
     inputType: Secret
     multiline: false
     description: Authentication token to access InfluxDB.
-    defaultValue: grafana_token
+    defaultValue: influx_pwd
     required: true
   - name: INFLUXDB_ORG
     inputType: FreeText
