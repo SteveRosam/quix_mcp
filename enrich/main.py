@@ -51,7 +51,7 @@ sdf = sdf.apply(lambda row: {
 sdf.print()
 
 # Send the message to the output topic
-# sdf.to_topic(output_topic)
+sdf.to_topic(output_topic)
 
 if __name__ == "__main__":
     # Start the config ID incrementing thread before running the app
