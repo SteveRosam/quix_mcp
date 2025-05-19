@@ -1,10 +1,23 @@
 import os
+import threading
+import time
 from quixstreams import Application
 from datetime import datetime
 
 # for local dev, load env vars from a .env file
 from dotenv import load_dotenv
 load_dotenv()
+
+# Global variable for the config ID
+current_config_id = 1
+
+# Function to run in a separate thread
+def increment_config_id():
+    global current_config_id
+    while True:
+        time.sleep(5)  # Increment every 5 seconds
+        current_config_id += 1
+        print(f"Config ID updated to: {current_config_id}")
 
 app = Application(consumer_group="hard-braking-v133", auto_offset_reset="earliest", use_changelog_topics=False)
 
@@ -21,11 +34,6 @@ sdf = sdf.apply(lambda row: float(row["Brake"])) \
         .hopping_window(1000, 200).mean().final() 
         
 sdf.print()
-
-
-# GET AND CACHE THE CURRENT CONFIG
-current_config_id = 1
-
 
 # Create nice JSON alert message.
 sdf = sdf.apply(lambda row: {
@@ -44,4 +52,9 @@ sdf.print()
 # sdf.to_topic(output_topic)
 
 if __name__ == "__main__":
+    # Start the config ID incrementing thread before running the app
+    config_thread = threading.Thread(target=increment_config_id, daemon=True)
+    config_thread.start()
+    
+    # Run the application
     app.run()
