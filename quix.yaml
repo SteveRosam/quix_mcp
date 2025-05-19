@@ -176,10 +176,10 @@ deployments:
         required: true
         value: eu-central-1-1.aws.cloud2.influxdata.com
       - name: INFLUXDB_TOKEN
-        inputType: FreeText
+        inputType: Secret
         description: Authentication token to access InfluxDB.
         required: true
-        value: xxx
+        secretKey: grafana_token
       - name: INFLUXDB_ORG
         inputType: FreeText
         description: Organization name in InfluxDB.
@@ -193,7 +193,7 @@ deployments:
       - name: INFLUXDB_MEASUREMENT_NAME
         inputType: FreeText
         description: The InfluxDB measurement to read data from. If not specified, the name of the output topic will be used
-        value: xxx
+        value: measurement1
 
 # This section describes the Topics of the data pipeline
 topics:
