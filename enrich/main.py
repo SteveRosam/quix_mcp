@@ -33,7 +33,8 @@ sdf = sdf.apply(lambda row: {
     "Alert": {
         "Title": "Hard braking detected.",
         "Message": "For last 1 second, average braking power was " + str(row["value"])
-    }
+    },
+    "config_id": current_config_id
 })
 
 # Print JSON messages in console.
