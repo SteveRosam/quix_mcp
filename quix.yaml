@@ -42,7 +42,7 @@ deployments:
       - name: INFLUXDB_TOKEN
         inputType: Secret
         description: The optional InfluxDB Token to use
-        secretKey: grafana_token
+        secretKey: influx_pwd
   - name: InfluxDB v2
     application: influxdb-v2
     version: latest
