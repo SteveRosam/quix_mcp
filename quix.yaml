@@ -194,6 +194,25 @@ deployments:
         inputType: FreeText
         description: The InfluxDB measurement to read data from. If not specified, the name of the output topic will be used
         value: measurement1
+  - name: Enrich
+    application: enrich
+    version: latest
+    deploymentType: Service
+    resources:
+      cpu: 200
+      memory: 500
+      replicas: 1
+    variables:
+      - name: input
+        inputType: InputTopic
+        description: This is the input topic for f1 data
+        required: true
+        value: f1-data
+      - name: output
+        inputType: OutputTopic
+        description: This is the output topic for hard braking events
+        required: true
+        value: hard-braking
 
 # This section describes the Topics of the data pipeline
 topics:
