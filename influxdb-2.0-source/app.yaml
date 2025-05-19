@@ -13,8 +13,9 @@ variables:
     required: true
   - name: INFLUXDB_HOST
     inputType: FreeText
+    multiline: false
     description: Host address for the InfluxDB instance.
-    defaultValue: eu-central-1-1.aws.cloud2.influxdata.com
+    defaultValue: influxdb:80
     required: true
   - name: INFLUXDB_TOKEN
     inputType: Secret
