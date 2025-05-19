@@ -43,4 +43,36 @@ deployments:
         inputType: Secret
         description: The optional InfluxDB Token to use
         secretKey: grafana_token
+  - name: InfluxDB v2
+    application: influxdb-v2
+    version: latest
+    deploymentType: Service
+    resources:
+      cpu: 1000
+      memory: 8000
+      replicas: 1
+    publicAccess:
+      enabled: true
+      urlPrefix: influxdb
+    network:
+      serviceName: influxdb
+      ports:
+        - port: 80
+          targetPort: 8086
+    variables:
+      - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+        inputType: Secret
+        description: Default Admin Token to initialize Influx with
+        required: true
+        secretKey: grafana_token
+      - name: DOCKER_INFLUXDB_INIT_PASSWORD
+        inputType: Secret
+        description: Default Admin password to initialize Influx with
+        required: true
+        secretKey: grafana_pass
+      - name: DOCKER_INFLUXDB_INIT_BUCKET
+        inputType: FreeText
+        description: Bucket Name to initialize Influx with
+        required: true
+        value: demo
 
