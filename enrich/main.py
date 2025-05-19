@@ -39,9 +39,9 @@ sdf.print()
 
 # Create nice JSON alert message.
 sdf = sdf.apply(lambda row: {
-    "Timestamp": str(datetime.fromtimestamp(row["Timestamp"]/1000)),
-    "Alert": "For last 1 second, average speed was " + str(row["Speed"]),
-    "Speed": row["Speed"],
+    "Timestamp": str(datetime.fromtimestamp(row["start"]/1000)),
+    "Alert": "For last 1 second, average speed was " + str(row["value"]),
+    "Speed": row["value"],
     "config_id": current_config_id
 })
 
