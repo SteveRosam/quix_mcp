@@ -194,7 +194,7 @@ deployments:
         inputType: FreeText
         description: The InfluxDB measurement to read data from. If not specified, the name of the output topic will be used
         value: measurement1
-  - name: Enrich
+  - name: Enrich with Config
     application: enrich
     version: latest
     deploymentType: Service
