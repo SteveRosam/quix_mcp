@@ -17,9 +17,10 @@ variables:
     defaultValue: eu-central-1-1.aws.cloud2.influxdata.com
     required: true
   - name: INFLUXDB_TOKEN
-    inputType: FreeText
+    inputType: Secret
+    multiline: false
     description: Authentication token to access InfluxDB.
-    defaultValue: xxx
+    defaultValue: grafana_token
     required: true
   - name: INFLUXDB_ORG
     inputType: FreeText
