@@ -179,7 +179,7 @@ deployments:
         inputType: Secret
         description: Authentication token to access InfluxDB.
         required: true
-        secretKey: grafana_token
+        secretKey: influx_pwd
       - name: INFLUXDB_ORG
         inputType: FreeText
         description: Organization name in InfluxDB.
