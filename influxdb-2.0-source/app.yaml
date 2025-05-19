@@ -15,7 +15,7 @@ variables:
     inputType: FreeText
     multiline: false
     description: Host address for the InfluxDB instance.
-    defaultValue: influxdb
+    defaultValue: http://influxdb:80
     required: true
   - name: INFLUXDB_TOKEN
     inputType: Secret
