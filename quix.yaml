@@ -38,9 +38,9 @@ deployments:
         inputType: Secret
         description: Password for the admin user
         required: true
-        secretKey: grafana_password
+        secretKey: grafana_pass
       - name: INFLUXDB_TOKEN
         inputType: Secret
         description: The optional InfluxDB Token to use
-        secretKey: grafana_password
+        secretKey: grafana_token
 
