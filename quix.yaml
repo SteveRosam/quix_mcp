@@ -64,12 +64,12 @@ deployments:
         inputType: Secret
         description: Default Admin Token to initialize Influx with
         required: true
-        secretKey: grafana_token
+        secretKey: influx_pwd
       - name: DOCKER_INFLUXDB_INIT_PASSWORD
         inputType: Secret
         description: Default Admin password to initialize Influx with
         required: true
-        secretKey: grafana_pass
+        secretKey: influx_pwd
       - name: DOCKER_INFLUXDB_INIT_BUCKET
         inputType: FreeText
         description: Bucket Name to initialize Influx with
