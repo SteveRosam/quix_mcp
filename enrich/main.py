@@ -21,7 +21,7 @@ def increment_config_id():
             current_config_id = 1
         print(f"Config ID updated to: {current_config_id}")
 
-app = Application(consumer_group="hard-braking-v133", auto_offset_reset="earliest", use_changelog_topics=False)
+app = Application(consumer_group="hard-braking-v136543", auto_offset_reset="earliest", use_changelog_topics=False)
 
 input_topic = app.topic(os.environ["input"])
 output_topic = app.topic(os.environ["output"])
