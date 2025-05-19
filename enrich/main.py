@@ -41,6 +41,7 @@ sdf.print()
 sdf = sdf.apply(lambda row: {
     "Timestamp": str(datetime.fromtimestamp(row["start"]/1000)),
     "Alert": "For last 1 second, average braking power was " + str(row["value"]),
+    "Speed": row["Speed"],
     "config_id": current_config_id
 })
 
