@@ -17,6 +17,8 @@ def increment_config_id():
     while True:
         time.sleep(5)  # Increment every 5 seconds
         current_config_id += 1
+        if current_config_id > 10:
+            current_config_id = 1
         print(f"Config ID updated to: {current_config_id}")
 
 app = Application(consumer_group="hard-braking-v133", auto_offset_reset="earliest", use_changelog_topics=False)
