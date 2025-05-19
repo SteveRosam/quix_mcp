@@ -11,9 +11,9 @@ datasources:
     basicAuthUser: "admin"
     withCredentials: false
     jsonData:
-      dbName: "quix"
+      dbName: "water"
       httpMode: "POST"
-      organization: "quix"
+      organization: "play_org"
       version: "Flux"
     secureJsonData:
       token: "${INFLUXDB_TOKEN}"            
