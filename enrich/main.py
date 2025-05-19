@@ -40,10 +40,7 @@ sdf.print()
 # Create nice JSON alert message.
 sdf = sdf.apply(lambda row: {
     "Timestamp": str(datetime.fromtimestamp(row["start"]/1000)),
-    "Alert": {
-        "Title": "Hard braking detected.",
-        "Message": "For last 1 second, average braking power was " + str(row["value"])
-    },
+    "Alert": "For last 1 second, average braking power was " + str(row["value"]),
     "config_id": current_config_id
 })
 
