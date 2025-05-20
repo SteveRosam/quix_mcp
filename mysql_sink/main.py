@@ -117,6 +117,8 @@ class MySQLSink(BatchingSink):
                 row_values = tuple(record.get(col, None) for col in self.columns)
                 values.append(row_values)
             
+
+            print(values[2::])
             # Execute batch insert
             cursor.executemany(insert_sql, values)
             self.connection.commit()
