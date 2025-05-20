@@ -11,7 +11,7 @@ variables:
     inputType: OutputTopic
     multiline: false
     description: This is the output for the hugging face model score
-    defaultValue: hard-braking
+    defaultValue: default_topic
     required: true
   - name: secret
     inputType: Secret
