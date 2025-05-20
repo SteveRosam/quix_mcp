@@ -145,7 +145,7 @@ def main():
     mysql_sink = MySQLSink(**mysql_config)
     
     # Get the input topic from environment variable
-    input_topic = app.topic(name=os.getenv("KAFKA_TOPIC", "default_topic"))
+    input_topic = app.topic(name=os.getenv("topic", "default_topic"))
     sdf = app.dataframe(topic=input_topic)
     
     # Process the data
