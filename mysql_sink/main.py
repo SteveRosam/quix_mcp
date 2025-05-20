@@ -1,7 +1,7 @@
 import mysql.connector
 from mysql.connector import Error
 from quixstreams import Application
-from quixstreams.sinks import BatchingSink, SinkBatch
+from quixstreams.sinks import BatchingSink, SinkBatch, SinkBackpressureError
 import json
 import os
 import time
