@@ -333,6 +333,31 @@ deployments:
         description: Admin password
         required: true
         secretKey: mysql_pwd
+  - name: mysql_sink
+    application: mysql_sink
+    version: latest
+    deploymentType: Service
+    resources:
+      cpu: 200
+      memory: 500
+      replicas: 1
+    variables:
+      - name: input
+        inputType: InputTopic
+        description: Name of the input topic to listen to.
+        value: hard-braking
+      - name: mysql_server
+        inputType: FreeText
+        value: mysql
+      - name: mysql_db
+        inputType: FreeText
+        value: quix
+      - name: mysql_user
+        inputType: FreeText
+        value: quix
+      - name: mysql_password
+        inputType: Secret
+        secretKey: mysql_pwd
 
 # This section describes the Topics of the data pipeline
 topics:
