@@ -9,8 +9,9 @@ variables:
     required: true
   - name: output
     inputType: OutputTopic
+    multiline: false
     description: This is the output for the hugging face model score
-    defaultValue: hugging-face-output
+    defaultValue: hard-braking
     required: true
 dockerfile: dockerfile
 runEntryPoint: main.py
