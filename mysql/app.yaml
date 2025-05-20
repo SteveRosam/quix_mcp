@@ -19,7 +19,9 @@ variables:
     required: true
   - name: MYSQL_PASSWORD
     inputType: Secret
+    multiline: false
     description: Admin password
+    defaultValue: mysql_pwd
     required: true
 dockerfile: dockerfile
 defaultFile: dockerfile
