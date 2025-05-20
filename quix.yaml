@@ -299,6 +299,40 @@ deployments:
         inputType: FreeText
         description: The number of seconds that sink waits before flushing data to MongoDB
         value: 1
+  - name: mysql
+    application: mysql
+    version: latest
+    deploymentType: Service
+    resources:
+      cpu: 200
+      memory: 500
+      replicas: 1
+    network:
+      serviceName: mysql
+      ports:
+        - port: 3306
+          targetPort: 3306
+    variables:
+      - name: MYSQL_ROOT_PASSWORD
+        inputType: Secret
+        description: The rootpassword to initialize mysql with
+        required: true
+        secretKey: mysql_pwd
+      - name: MYSQL_DATABASE
+        inputType: FreeText
+        description: DB Name
+        required: true
+        value: quix
+      - name: MYSQL_USER
+        inputType: FreeText
+        description: Admin user
+        required: true
+        value: quix
+      - name: MYSQL_PASSWORD
+        inputType: Secret
+        description: Admin password
+        required: true
+        secretKey: mysql_pwd
 
 # This section describes the Topics of the data pipeline
 topics:
