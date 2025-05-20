@@ -39,7 +39,8 @@ class MySQLSink(BatchingSink):
             cursor = self.connection.cursor()
             
             # Get the first message to determine the data structure
-            sample_data = data[0]  # Data is already a dictionary
+            # The data is nested under 'value' key
+            sample_data = data[0]['value']
             self.columns = sample_data.keys()
             
             # Create table name based on topic
@@ -93,8 +94,8 @@ class MySQLSink(BatchingSink):
             # Convert all data to tuples
             values = []
             for item in data:
-                # Data is already a dictionary, no need to parse JSON
-                record = item
+                # Access the nested 'value' dictionary
+                record = item['value']
                 row_values = tuple(record[col] for col in self.columns)
                 values.append(row_values)
             
