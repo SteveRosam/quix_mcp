@@ -39,8 +39,8 @@ class MySQLSink(BatchingSink):
             cursor = self.connection.cursor()
             
             # Get the first message to determine the data structure
-            sample_data = data[0]  # Data is a flat dictionary
-            self.columns = sample_data.keys()
+            sample_data = data[0]
+            self.columns = list(sample_data.keys())  # Ensure ordered columns
             
             # Create table name based on topic
             self.table_name = f"kafka_{int(time.time())}"
@@ -48,20 +48,38 @@ class MySQLSink(BatchingSink):
             # Create table with appropriate data types
             columns_sql = []
             for col in self.columns:
-                # Determine appropriate MySQL data type based on first value
+                # Get the first value to determine type
                 value = sample_data[col]
-                if isinstance(value, int):
-                    columns_sql.append(f"{col} INT")  # Changed from BIGINT to INT
-                elif isinstance(value, float):
-                    columns_sql.append(f"{col} FLOAT")  # Changed from DOUBLE to FLOAT
+                
+                # Handle None values
+                if value is None:
+                    columns_sql.append(f"{col} VARCHAR(255) NULL")
+                    continue
+                
+                # Handle numeric types
+                if isinstance(value, (int, float)):
+                    if isinstance(value, int):
+                        columns_sql.append(f"{col} INT")
+                    else:
+                        columns_sql.append(f"{col} FLOAT")
+                # Handle boolean
                 elif isinstance(value, bool):
                     columns_sql.append(f"{col} BOOLEAN")
+                # Handle string types
                 elif isinstance(value, str):
-                    # Handle timestamp and other string values
-                    if 'timestamp' in col.lower():
-                        columns_sql.append(f"{col} TIMESTAMP")
+                    # Handle timestamp-like strings
+                    if any(word in col.lower() for word in ['time', 'date', 'timestamp']):
+                        try:
+                            # Try to parse as datetime
+                            import datetime
+                            datetime.datetime.strptime(value, '%Y-%m-%d %H:%M:%S.%f')
+                            columns_sql.append(f"{col} TIMESTAMP")
+                        except (ValueError, TypeError):
+                            # If not a valid timestamp, treat as regular string
+                            columns_sql.append(f"{col} VARCHAR(255)")
                     else:
                         columns_sql.append(f"{col} VARCHAR(255)")
+                # Handle other types as strings
                 else:
                     columns_sql.append(f"{col} VARCHAR(255)")
             
@@ -95,11 +113,11 @@ class MySQLSink(BatchingSink):
             for item in data:
                 # Data is a flat dictionary
                 record = item
-                row_values = tuple(record[col] for col in self.columns)
+                # Get values in the same order as columns
+                row_values = tuple(record.get(col, None) for col in self.columns)
                 values.append(row_values)
             
             # Execute batch insert
-            print(values)
             cursor.executemany(insert_sql, values)
             self.connection.commit()
             print(f"Inserted {len(values)} records into {self.table_name}")
@@ -138,7 +156,7 @@ def main():
 
     # Setup Quix Streams Application
     app = Application(
-        consumer_group="mysql_sink_v222",
+        consumer_group="mysql_sink_v2",
         auto_create_topics=True,
         auto_offset_reset="earliest"
     )
