@@ -365,3 +365,4 @@ topics:
   - name: input-data
   - name: influxdbv2-data
   - name: hard-braking
+  - name: default_topic
