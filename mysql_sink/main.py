@@ -128,10 +128,10 @@ class MySQLSink(BatchingSink):
 def main():
     # MySQL connection details
     mysql_config = {
-        "host": "localhost",
-        "database": "kafka_data",
-        "user": "root",
-        "password": "password"
+        "host": os.environ["mysql_server"],
+        "database": os.environ["mysql_db"],
+        "user": os.environ["mysql_user"],
+        "password": os.environ["mysql_password"]
     }
 
     # Setup Quix Streams Application
