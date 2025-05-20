@@ -18,6 +18,10 @@ variables:
     inputType: FreeText
     multiline: false
     defaultValue: quix
+  - name: mysql_password
+    inputType: Secret
+    multiline: false
+    defaultValue: mysql_pwd
 dockerfile: dockerfile
 runEntryPoint: main.py
 defaultFile: main.py
