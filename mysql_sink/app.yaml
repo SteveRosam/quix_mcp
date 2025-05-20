@@ -14,6 +14,10 @@ variables:
     inputType: FreeText
     multiline: false
     defaultValue: quix
+  - name: mysql_user
+    inputType: FreeText
+    multiline: false
+    defaultValue: quix
 dockerfile: dockerfile
 runEntryPoint: main.py
 defaultFile: main.py
