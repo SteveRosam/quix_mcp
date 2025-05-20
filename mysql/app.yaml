@@ -5,7 +5,7 @@ variables:
     inputType: Secret
     description: The rootpassword to initialize mysql with
     required: true
-  - name: 
+  - name: a
     inputType: Secret
     description: The root password to initialize MongoDB with
     defaultValue: influx_pwd
