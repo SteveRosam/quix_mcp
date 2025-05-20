@@ -237,68 +237,6 @@ deployments:
         description: The root password to initialize MongoDB with
         required: true
         secretKey: influx_pwd
-  - name: MongoDB Sink
-    application: mongodb-sink
-    version: latest
-    deploymentType: Service
-    resources:
-      cpu: 200
-      memory: 500
-      replicas: 1
-    variables:
-      - name: input
-        inputType: InputTopic
-        description: The input Kafka topic name
-        required: true
-        value: hard-braking
-      - name: MONGODB_URL
-        inputType: Secret
-        description: MongoDB url; most commonly mongodb://username:password@host:port
-        required: true
-        secretKey: mongo_url
-      - name: MONGODB_DB
-        inputType: FreeText
-        description: MongoDB database name
-        required: true
-        value: quix
-      - name: MONGODB_COLLECTION
-        inputType: FreeText
-        description: MongoDB collection name
-        required: true
-        value: quix
-      - name: MONGODB_DOCUMENT_MATCHER
-        inputType: FreeText
-        description: How documents are selected to update; accepts a JSON-serializable string formatted as a MongoDB filter Query.
-        value: '{"_id": "__key"}'
-      - name: MONGODB_UPSERT
-        inputType: FreeText
-        description: Boolean to create documents if no matches with MONGODB_DOCUMENT_MATCHER
-        value: true
-      - name: MONGODB_UPDATE_METHOD
-        inputType: FreeText
-        description: How documents found with MONGODB_DOCUMENT_MATCHER are updated
-        value: UpdateOne
-      - name: MONGODB_ADD_MESSAGE_METADATA
-        inputType: FreeText
-        description: Boolean to include key, timestamp, and headers as '__{field}'
-        value: false
-      - name: MONGODB_ADD_TOPIC_METADATA
-        inputType: FreeText
-        description: Boolean to include topic, partition, and offset as '__{field}'
-        value: false
-      - name: CONSUMER_GROUP_NAME
-        inputType: FreeText
-        description: The name of the consumer group to use when consuming from Kafka
-        required: true
-        value: quixstreams-mongodb-sink
-      - name: BUFFER_SIZE
-        inputType: FreeText
-        description: The number of records that sink waits before flushing data to MongoDB
-        value: 1000
-      - name: BUFFER_TIMEOUT
-        inputType: FreeText
-        description: The number of seconds that sink waits before flushing data to MongoDB
-        value: 1
 
 # This section describes the Topics of the data pipeline
 topics:
