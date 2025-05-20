@@ -213,6 +213,30 @@ deployments:
         description: This is the output topic for hard braking events
         required: true
         value: hard-braking
+  - name: MongoDB
+    application: mongodb
+    version: latest
+    deploymentType: Service
+    resources:
+      cpu: 200
+      memory: 800
+      replicas: 1
+    network:
+      serviceName: mongodb
+      ports:
+        - port: 27017
+          targetPort: 27017
+    variables:
+      - name: MONGO_INITDB_ROOT_USERNAME
+        inputType: FreeText
+        description: The root username to initialize MongoDB with
+        required: true
+        value: admin
+      - name: MONGO_INITDB_ROOT_PASSWORD
+        inputType: Secret
+        description: The root password to initialize MongoDB with
+        required: true
+        secretKey: influx_pwd
 
 # This section describes the Topics of the data pipeline
 topics:
