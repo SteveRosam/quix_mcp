@@ -8,6 +8,7 @@ variables:
     required: true
   - name: MONGODB_URL
     inputType: Secret
+    multiline: false
     description: MongoDB url; most commonly mongodb://username:password@host:port
     defaultValue: mongo_url
     required: true
