@@ -1,8 +1,19 @@
-FROM mongo:8.0.5
+# Use the official MySQL image as base
+FROM mysql:8.0
 
-# To enable function without State enabled, however will only be temporary
-RUN mkdir -p /app/state && chown -R mongodb:mongodb /app/state
+# Set environment variables
+ENV MYSQL_ROOT_PASSWORD=rootpassword
+ENV MYSQL_DATABASE=mydb
+ENV MYSQL_USER=user
+ENV MYSQL_PASSWORD=password
 
-EXPOSE 27017
+# Copy custom configuration if needed
+# COPY my.cnf /etc/mysql/conf.d/
 
-CMD ["mongod", "--bind_ip_all", "--dbpath", "/app/state"]
+# Copy initialization scripts if needed
+# COPY ./init.sql /docker-entrypoint-initdb.d/
+
+# Expose the default MySQL port
+EXPOSE 3306
+
+# The command is inherited from the base image
