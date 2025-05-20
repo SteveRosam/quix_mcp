@@ -39,8 +39,7 @@ class MySQLSink(BatchingSink):
             cursor = self.connection.cursor()
             
             # Get the first message to determine the data structure
-            # The data is nested under 'value' key
-            sample_data = data[0]['value']
+            sample_data = data[0]  # Data is a flat dictionary
             self.columns = sample_data.keys()
             
             # Create table name based on topic
@@ -52,9 +51,9 @@ class MySQLSink(BatchingSink):
                 # Determine appropriate MySQL data type based on first value
                 value = sample_data[col]
                 if isinstance(value, int):
-                    columns_sql.append(f"{col} BIGINT")
+                    columns_sql.append(f"{col} INT")  # Changed from BIGINT to INT
                 elif isinstance(value, float):
-                    columns_sql.append(f"{col} DOUBLE")
+                    columns_sql.append(f"{col} FLOAT")  # Changed from DOUBLE to FLOAT
                 elif isinstance(value, bool):
                     columns_sql.append(f"{col} BOOLEAN")
                 elif isinstance(value, str):
@@ -94,8 +93,8 @@ class MySQLSink(BatchingSink):
             # Convert all data to tuples
             values = []
             for item in data:
-                # Access the nested 'value' dictionary
-                record = item['value']
+                # Data is a flat dictionary
+                record = item
                 row_values = tuple(record[col] for col in self.columns)
                 values.append(row_values)
             
@@ -138,7 +137,7 @@ def main():
 
     # Setup Quix Streams Application
     app = Application(
-        consumer_group="mysql_sink_v3",
+        consumer_group="mysql_sink_v2",
         auto_create_topics=True,
         auto_offset_reset="earliest"
     )
