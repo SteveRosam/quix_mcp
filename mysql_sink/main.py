@@ -158,7 +158,7 @@ def main():
 
     # Setup Quix Streams Application
     app = Application(
-        consumer_group="mysql_sink_v26",
+        consumer_group="mysql_sink_v262",
         auto_create_topics=True,
         auto_offset_reset="earliest"
     )
