@@ -3,7 +3,9 @@ language: docker
 variables:
   - name: MYSQL_ROOT_PASSWORD
     inputType: Secret
+    multiline: false
     description: The rootpassword to initialize mysql with
+    defaultValue: mysql_pwd
     required: true
   - name: MYSQL_DATABASE
     inputType: FreeText
