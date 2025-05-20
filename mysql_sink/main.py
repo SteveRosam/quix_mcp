@@ -99,6 +99,7 @@ class MySQLSink(BatchingSink):
                 values.append(row_values)
             
             # Execute batch insert
+            print(values)
             cursor.executemany(insert_sql, values)
             self.connection.commit()
             print(f"Inserted {len(values)} records into {self.table_name}")
