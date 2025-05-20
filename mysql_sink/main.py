@@ -149,8 +149,8 @@ def main():
     sdf = app.dataframe(topic=input_topic)
     
     # Process the data
-    sdf = sdf.apply(lambda row: row).print(metadata=True)
-    
+    # sdf = sdf.apply(lambda row: row).print(metadata=True)
+    sdf.print()
     # Set up the sink
     sdf.sink(mysql_sink)
     
