@@ -39,7 +39,7 @@ class MySQLSink(BatchingSink):
             cursor = self.connection.cursor()
             
             # Get the first message to determine the data structure
-            sample_data = json.loads(data[0])
+            sample_data = data[0]  # Data is already a dictionary
             self.columns = sample_data.keys()
             
             # Create table name based on topic
@@ -56,6 +56,12 @@ class MySQLSink(BatchingSink):
                     columns_sql.append(f"{col} DOUBLE")
                 elif isinstance(value, bool):
                     columns_sql.append(f"{col} BOOLEAN")
+                elif isinstance(value, str):
+                    # Handle timestamp and other string values
+                    if 'timestamp' in col.lower():
+                        columns_sql.append(f"{col} TIMESTAMP")
+                    else:
+                        columns_sql.append(f"{col} VARCHAR(255)")
                 else:
                     columns_sql.append(f"{col} VARCHAR(255)")
             
@@ -122,10 +128,10 @@ class MySQLSink(BatchingSink):
 def main():
     # MySQL connection details
     mysql_config = {
-        "host": os.environ["mysql_server"],
-        "database": os.environ["mysql_db"],
-        "user": os.environ["mysql_user"],
-        "password": os.environ["mysql_password"]
+        "host": "localhost",
+        "database": "kafka_data",
+        "user": "root",
+        "password": "password"
     }
 
     # Setup Quix Streams Application
@@ -139,7 +145,7 @@ def main():
     mysql_sink = MySQLSink(**mysql_config)
     
     # Get the input topic from environment variable
-    input_topic = app.topic(name=os.getenv("input", "default_topic"))
+    input_topic = app.topic(name=os.getenv("KAFKA_TOPIC", "default_topic"))
     sdf = app.dataframe(topic=input_topic)
     
     # Process the data
