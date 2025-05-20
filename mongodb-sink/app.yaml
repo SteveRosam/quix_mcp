@@ -1,0 +1,60 @@
+name: mongodb-sink
+language: python
+variables:
+  - name: input
+    inputType: InputTopic
+    description: The input Kafka topic name
+    defaultValue: hard-braking
+    required: true
+  - name: MONGODB_URL
+    inputType: Secret
+    description: MongoDB url; most commonly mongodb://username:password@host:port
+    defaultValue: mongo_url
+    required: true
+  - name: MONGODB_DB
+    inputType: FreeText
+    description: MongoDB database name
+    defaultValue: quix
+    required: true
+  - name: MONGODB_COLLECTION
+    inputType: FreeText
+    description: MongoDB collection name
+    defaultValue: quix
+    required: true
+  - name: MONGODB_DOCUMENT_MATCHER
+    inputType: FreeText
+    description: How documents are selected to update; accepts a JSON-serializable string formatted as a MongoDB filter Query.
+    defaultValue: '{"_id": "__key"}'
+  - name: MONGODB_UPSERT
+    inputType: FreeText
+    description: Boolean to create documents if no matches with MONGODB_DOCUMENT_MATCHER
+    defaultValue: true
+  - name: MONGODB_UPDATE_METHOD
+    inputType: FreeText
+    description: How documents found with MONGODB_DOCUMENT_MATCHER are updated
+    defaultValue: UpdateOne
+  - name: MONGODB_ADD_MESSAGE_METADATA
+    inputType: FreeText
+    description: Boolean to include key, timestamp, and headers as '__{field}'
+    defaultValue: false
+  - name: MONGODB_ADD_TOPIC_METADATA
+    inputType: FreeText
+    description: Boolean to include topic, partition, and offset as '__{field}'
+    defaultValue: false
+  - name: CONSUMER_GROUP_NAME
+    inputType: FreeText
+    description: The name of the consumer group to use when consuming from Kafka
+    defaultValue: quixstreams-mongodb-sink
+    required: true
+  - name: BUFFER_SIZE
+    inputType: FreeText
+    description: The number of records that sink waits before flushing data to MongoDB
+    defaultValue: 1000
+  - name: BUFFER_TIMEOUT
+    inputType: FreeText
+    description: The number of seconds that sink waits before flushing data to MongoDB
+    defaultValue: 1
+dockerfile: dockerfile
+runEntryPoint: main.py
+defaultFile: main.py
+libraryItemId: mongodb-destination
