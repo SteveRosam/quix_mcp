@@ -93,7 +93,8 @@ class MySQLSink(BatchingSink):
             # Convert all data to tuples
             values = []
             for item in data:
-                record = json.loads(item)
+                # Data is already a dictionary, no need to parse JSON
+                record = item
                 row_values = tuple(record[col] for col in self.columns)
                 values.append(row_values)
             
