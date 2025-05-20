@@ -1,0 +1,15 @@
+name: mysql
+language: docker
+variables:
+  - name: MONGO_INITDB_ROOT_USERNAME
+    inputType: FreeText
+    description: The root username to initialize MongoDB with
+    defaultValue: admin
+    required: true
+  - name: MONGO_INITDB_ROOT_PASSWORD
+    inputType: Secret
+    description: The root password to initialize MongoDB with
+    defaultValue: influx_pwd
+    required: true
+dockerfile: dockerfile
+defaultFile: dockerfile
