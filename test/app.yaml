@@ -3,7 +3,9 @@ language: python
 variables:
   - name: input
     inputType: InputTopic
+    multiline: false
     description: This is the raw data input topic
+    defaultValue: f1-data
     required: true
   - name: output
     inputType: OutputTopic
