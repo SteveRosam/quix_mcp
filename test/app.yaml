@@ -13,6 +13,10 @@ variables:
     description: This is the output for the hugging face model score
     defaultValue: hard-braking
     required: true
+  - name: secret
+    inputType: Secret
+    multiline: false
+    defaultValue: influx_pwd
 dockerfile: dockerfile
 runEntryPoint: main.py
 defaultFile: main.py
