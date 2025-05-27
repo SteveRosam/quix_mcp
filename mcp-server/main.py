@@ -948,38 +948,38 @@ if __name__ == "__main__":
     import argparse
     
     # Load environment variables from .env file if it exists
-    env_path = Path('.env')
-    if env_path.exists():
-        dotenv.load_dotenv(env_path)
-        logger.info("Loaded environment variables from .env file")
+    # env_path = Path('.env')
+    # if env_path.exists():
+    #     dotenv.load_dotenv(env_path)
+    #     logger.info("Loaded environment variables from .env file")
     
-    parser = argparse.ArgumentParser(description='Run Quix Applications MCP SSE-based server')
-    parser.add_argument('--host', default='0.0.0.0', help='Host to bind to')
-    parser.add_argument('--port', type=int, default=80, help='Port to listen on')
-    parser.add_argument('--quix-token', help='Quix Personal Access Token (PAT)')
-    parser.add_argument('--quix-base-url', help='Quix Portal Base URL (e.g., https://portal-myenv.platform.quix.io/)')
-    parser.add_argument('--quix-workspace', help='Quix Workspace ID')
-    parser.add_argument('--env-file', help='Path to .env file (default: .env in current directory)')
-    args = parser.parse_args()
+    # parser = argparse.ArgumentParser(description='Run Quix Applications MCP SSE-based server')
+    # parser.add_argument('--host', default='0.0.0.0', help='Host to bind to')
+    # parser.add_argument('--port', type=int, default=80, help='Port to listen on')
+    # parser.add_argument('--quix-token', help='Quix Personal Access Token (PAT)')
+    # parser.add_argument('--quix-base-url', help='Quix Portal Base URL (e.g., https://portal-myenv.platform.quix.io/)')
+    # parser.add_argument('--quix-workspace', help='Quix Workspace ID')
+    # parser.add_argument('--env-file', help='Path to .env file (default: .env in current directory)')
+    # args = parser.parse_args()
     
-    # Load from specific env file if provided
-    if args.env_file:
-        env_path = Path(args.env_file)
-        if env_path.exists():
-            dotenv.load_dotenv(env_path)
-            logger.info(f"Loaded environment variables from {args.env_file}")
-        else:
-            logger.warning(f"Environment file {args.env_file} not found")
+    # # Load from specific env file if provided
+    # if args.env_file:
+    #     env_path = Path(args.env_file)
+    #     if env_path.exists():
+    #         dotenv.load_dotenv(env_path)
+    #         logger.info(f"Loaded environment variables from {args.env_file}")
+    #     else:
+    #         logger.warning(f"Environment file {args.env_file} not found")
     
-    # Set environment variables if provided via arguments (overrides .env)
-    if args.Quix__Sdk__Token:
-        os.environ['Quix__Sdk__Token'] = args.Quix__Sdk__Token
+    # # Set environment variables if provided via arguments (overrides .env)
+    # if args.Quix__Sdk__Token:
+    #     os.environ['Quix__Sdk__Token'] = args.Quix__Sdk__Token
     
-    if args.Quix__Portal__Api:
-        os.environ['Quix__Portal__Api'] = args.Quix__Portal__Api
+    # if args.Quix__Portal__Api:
+    #     os.environ['Quix__Portal__Api'] = args.Quix__Portal__Api
         
-    if args.Quix__Workspace__Id:
-        os.environ['Quix__Workspace__Id'] = args.Quix__Workspace__Id
+    # if args.Quix__Workspace__Id:
+    #     os.environ['Quix__Workspace__Id'] = args.Quix__Workspace__Id
     
     # Check if required environment variables are set
     if not os.environ.get('Quix__Sdk__Token'):
