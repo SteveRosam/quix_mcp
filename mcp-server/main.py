@@ -42,6 +42,9 @@ async def make_quix_request(
     base_url = os.environ.get("Quix__Portal__Api")
     workspace_id = os.environ.get("Quix__Workspace__Id")
     
+    print(os.environ)
+
+    
     if not token:
         raise QuixApiError("Missing QUIX_TOKEN environment variable. Please set your Quix Personal Access Token.")
     
