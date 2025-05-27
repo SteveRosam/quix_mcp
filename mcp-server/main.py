@@ -994,6 +994,9 @@ if __name__ == "__main__":
         logger.error("Quix__Workspace__Id environment variable is required. Please set it with --quix-workspace or in your .env file")
         exit(1)
     
+    host = "0.0.0.0"
+    port = "80"
+
     # Bind SSE request handling to MCP server
     mcp_server = mcp._mcp_server
     starlette_app = create_starlette_app(mcp_server, debug=True)
@@ -1003,4 +1006,4 @@ if __name__ == "__main__":
     logger.info(f"Using Quix Workspace {os.environ.get('Quix__Workspace__Id')}")
     
     logger.info(f"Starting uvicorn server on {args.host}:{args.port} using {starlette_app}")
-    uvicorn.run(starlette_app, host=args.host, port=args.port)
+    uvicorn.run(starlette_app, host=host, port=port)
