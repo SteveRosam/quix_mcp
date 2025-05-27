@@ -945,7 +945,7 @@ def create_starlette_app(mcp_server: Server, *, debug: bool = False) -> Starlett
     )
 
 if __name__ == "__main__":
-    import argparse
+    # import argparse
     
     # Load environment variables from .env file if it exists
     # env_path = Path('.env')
