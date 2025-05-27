@@ -948,6 +948,78 @@ def create_starlette_app(mcp_server: Server, *, debug: bool = False) -> Starlett
             )
 
     async def handle_messages(request: Request):
+        # Handle CORS preflight
+        if request.method == "OPTIONS":
+            from starlette.responses import Response
+            headers = {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "POST, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type",
+            }
+            return Response(status_code=200, headers=headers)
+
+        if request.method != "POST":
+            from starlette.responses import JSONResponse
+            return JSONResponse(
+                {"error": "Method not allowed"}, 
+                status_code=405,
+                headers={"Access-Control-Allow-Origin": "*"}
+            )
+        
+        try:
+            body = await request.json()
+        except ValueError:
+            from starlette.responses import JSONResponse
+            return JSONResponse(
+                {"error": "Invalid JSON"}, 
+                status_code=400,
+                headers={"Access-Control-Allow-Origin": "*"}
+            )
+            
+        # Process the message through the SSE transport
+        response = await sse.handle_post_message(request.scope, request.receive, request._send)
+        return response
+
+    # Add CORS middleware
+    from starlette.middleware.cors import CORSMiddleware
+    
+    app = Starlette(
+        debug=debug,
+        routes=[
+            Route("/", endpoint=root, methods=["GET"]),
+            Route("/sse", endpoint=handle_sse, methods=["GET"]),
+            # Handle both with and without trailing slash
+            Route("/messages", endpoint=handle_messages, methods=["POST", "OPTIONS"]),
+            Route("/messages/", endpoint=handle_messages, methods=["POST", "OPTIONS"]),
+        ],
+    )
+    
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+    
+    return app
+
+    """Create a Starlette application that can serve the provided mcp server with SSE."""
+    sse = SseServerTransport("/messages/")
+
+    async def handle_sse(request: Request) -> None:
+        async with sse.connect_sse(
+                request.scope,
+                request.receive,
+                request._send,  # noqa: SLF001
+        ) as (read_stream, write_stream):
+            await mcp_server.run(
+                read_stream,
+                write_stream,
+                mcp_server.create_initialization_options(),
+            )
+
+    async def handle_messages(request: Request):
         if request.method != "POST":
             from starlette.responses import JSONResponse
             return JSONResponse({"error": "Method not allowed"}, status_code=405)
