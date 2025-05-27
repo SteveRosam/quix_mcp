@@ -920,6 +920,17 @@ async def update_application_variables(
     except QuixApiError as e:
         return f"Error updating application variables: {str(e)}"
 
+async def root(request: Request):
+    from starlette.responses import JSONResponse
+    return JSONResponse({
+        "name": "Quix Applications MCP Server",
+        "version": "1.0.0",
+        "endpoints": {
+            "sse": "/sse",
+            "messages": "/messages/"
+        }
+    })
+
 def create_starlette_app(mcp_server: Server, *, debug: bool = False) -> Starlette:
     """Create a Starlette application that can serve the provided mcp server with SSE."""
     sse = SseServerTransport("/messages/")
@@ -939,6 +950,7 @@ def create_starlette_app(mcp_server: Server, *, debug: bool = False) -> Starlett
     return Starlette(
         debug=debug,
         routes=[
+            Route("/", endpoint=root, methods=["GET"]),
             Route("/sse", endpoint=handle_sse),
             Mount("/messages/", app=sse.handle_post_message),
         ],
