@@ -38,7 +38,7 @@ async def make_quix_request(
 ) -> Any:
     """Make a request to the Quix Portal API with proper error handling."""
     # Get environment variables
-    token = os.environ.get("QUIX_TOKEN")
+    token = os.environ.get("Quix__Sdk__Token")
     base_url = os.environ.get("Quix__Deployment__Network__PublicUrl")
     workspace_id = os.environ.get("Quix__Workspace__Id")
     
