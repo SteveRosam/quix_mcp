@@ -931,6 +931,8 @@ async def root(request: Request):
         }
     })
 
+from starlette.middleware.cors import CORSMiddleware
+
 def create_starlette_app(mcp_server: Server, *, debug: bool = False) -> Starlette:
     """Create a Starlette application that can serve the provided mcp server with SSE."""
     sse = SseServerTransport("/messages/")
@@ -978,11 +980,11 @@ def create_starlette_app(mcp_server: Server, *, debug: bool = False) -> Starlett
             
         # Process the message through the SSE transport
         response = await sse.handle_post_message(request.scope, request.receive, request._send)
+        if hasattr(response, 'headers'):
+            response.headers.update({"Access-Control-Allow-Origin": "*"})
         return response
 
-    # Add CORS middleware
-    from starlette.middleware.cors import CORSMiddleware
-    
+    # Create the app
     app = Starlette(
         debug=debug,
         routes=[
@@ -994,6 +996,7 @@ def create_starlette_app(mcp_server: Server, *, debug: bool = False) -> Starlett
         ],
     )
     
+    # Add CORS middleware
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
@@ -1003,45 +1006,6 @@ def create_starlette_app(mcp_server: Server, *, debug: bool = False) -> Starlett
     )
     
     return app
-
-    """Create a Starlette application that can serve the provided mcp server with SSE."""
-    sse = SseServerTransport("/messages/")
-
-    async def handle_sse(request: Request) -> None:
-        async with sse.connect_sse(
-                request.scope,
-                request.receive,
-                request._send,  # noqa: SLF001
-        ) as (read_stream, write_stream):
-            await mcp_server.run(
-                read_stream,
-                write_stream,
-                mcp_server.create_initialization_options(),
-            )
-
-    async def handle_messages(request: Request):
-        if request.method != "POST":
-            from starlette.responses import JSONResponse
-            return JSONResponse({"error": "Method not allowed"}, status_code=405)
-        
-        try:
-            body = await request.json()
-        except ValueError:
-            from starlette.responses import JSONResponse
-            return JSONResponse({"error": "Invalid JSON"}, status_code=400)
-            
-        # Process the message through the SSE transport
-        response = await sse.handle_post_message(request.scope, request.receive, request._send)
-        return response
-
-    return Starlette(
-        debug=debug,
-        routes=[
-            Route("/", endpoint=root, methods=["GET"]),
-            Route("/sse", endpoint=handle_sse, methods=["GET"]),
-            Route("/messages/", endpoint=handle_messages, methods=["POST"]),
-        ],
-    )
 
 if __name__ == "__main__":
     # import argparse
