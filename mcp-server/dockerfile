@@ -27,8 +27,8 @@ RUN pip install --no-cache-dir -r "${MAINAPPPATH}/requirements.txt"
 COPY . "${MAINAPPPATH}/"
 
 # Create a non-root user
-RUN useradd -m mcpuser && chown -R mcpuser:mcpuser /app
-USER mcpuser
+# RUN useradd -m mcpuser && chown -R mcpuser:mcpuser /app
+# USER mcpuser
 
 # Required environment variables (these should be set when running the container)
 ENV Quix__Sdk__Token="" \
@@ -36,4 +36,4 @@ ENV Quix__Sdk__Token="" \
     Quix__Workspace__Id=""
 
 # Command to run the server
-CMD ["python", "main.py", "--host", "0.0.0.0", "--port", "80"]
+CMD ["python", "main.py"]
