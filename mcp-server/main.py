@@ -42,17 +42,14 @@ async def make_quix_request(
     base_url = os.environ.get("Quix__Portal__Api")
     workspace_id = os.environ.get("Quix__Workspace__Id")
     
-    print(os.environ)
-
-    
     if not token:
-        raise QuixApiError("Missing QUIX_TOKEN environment variable. Please set your Quix Personal Access Token.")
+        raise QuixApiError("Missing Quix__Sdk__Token environment variable. Please set your Quix Personal Access Token.")
     
     if not base_url:
-        raise QuixApiError("Missing QUIX_BASE_URL environment variable. Please set your Quix Base URL (e.g. https://portal-myenv.platform.quix.io/).")
+        raise QuixApiError("Missing Quix__Portal__Api environment variable. Please set your Quix Base URL (e.g. https://portal-myenv.platform.quix.io/).")
     
     if not workspace_id and "{workspaceId}" in path:
-        raise QuixApiError("Missing QUIX_WORKSPACE environment variable. Please set your Quix Workspace ID.")
+        raise QuixApiError("Missing Quix__Workspace__Id environment variable. Please set your Quix Workspace ID.")
     
     # Replace workspace_id in path if present
     if workspace_id and "{workspaceId}" in path:
@@ -975,26 +972,26 @@ if __name__ == "__main__":
             logger.warning(f"Environment file {args.env_file} not found")
     
     # Set environment variables if provided via arguments (overrides .env)
-    if args.quix_token:
-        os.environ['QUIX_TOKEN'] = args.quix_token
+    if args.Quix__Sdk__Token:
+        os.environ['Quix__Sdk__Token'] = args.Quix__Sdk__Token
     
-    if args.quix_base_url:
-        os.environ['QUIX_BASE_URL'] = args.quix_base_url
+    if args.Quix__Portal__Api:
+        os.environ['Quix__Portal__Api'] = args.Quix__Portal__Api
         
-    if args.quix_workspace:
-        os.environ['QUIX_WORKSPACE'] = args.quix_workspace
+    if args.Quix__Workspace__Id:
+        os.environ['Quix__Workspace__Id'] = args.Quix__Workspace__Id
     
     # Check if required environment variables are set
-    if not os.environ.get('QUIX_TOKEN'):
-        logger.error("QUIX_TOKEN environment variable is required. Please set it with --quix-token or in your .env file")
+    if not os.environ.get('Quix__Sdk__Token'):
+        logger.error("Quix__Sdk__Token environment variable is required. Please set it with --quix-token or in your .env file")
         exit(1)
     
-    if not os.environ.get('QUIX_BASE_URL'):
-        logger.error("QUIX_BASE_URL environment variable is required. Please set it with --quix-base-url or in your .env file")
+    if not os.environ.get('Quix__Portal__Api'):
+        logger.error("Quix__Portal__Api environment variable is required. Please set it with --quix-base-url or in your .env file")
         exit(1)
         
-    if not os.environ.get('QUIX_WORKSPACE'):
-        logger.error("QUIX_WORKSPACE environment variable is required. Please set it with --quix-workspace or in your .env file")
+    if not os.environ.get('Quix__Workspace__Id'):
+        logger.error("Quix__Workspace__Id environment variable is required. Please set it with --quix-workspace or in your .env file")
         exit(1)
     
     # Bind SSE request handling to MCP server
@@ -1002,7 +999,8 @@ if __name__ == "__main__":
     starlette_app = create_starlette_app(mcp_server, debug=True)
     
     logger.info(f"Starting Quix Applications MCP server on {args.host}:{args.port}")
-    logger.info(f"Using Quix Portal at {os.environ.get('QUIX_BASE_URL')}")
-    logger.info(f"Using Quix Workspace {os.environ.get('QUIX_WORKSPACE')}")
+    logger.info(f"Using Quix Portal at {os.environ.get('Quix__Portal__Api')}")
+    logger.info(f"Using Quix Workspace {os.environ.get('Quix__Workspace__Id')}")
     
+    logger.info(f"Starting uvicorn server on {args.host}:{args.port} using {starlette_app}")
     uvicorn.run(starlette_app, host=args.host, port=args.port)
