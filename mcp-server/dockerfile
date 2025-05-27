@@ -1,28 +1,40 @@
-FROM python:3.12.5-slim-bookworm
-			
+# Use official Python image
+FROM python:3.10-slim
+
 # Set environment variables for non-interactive setup and unbuffered output
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
     PYTHONIOENCODING=UTF-8 \
-    PYTHONPATH="/app"
-			
-# Build argument for setting the main app path
-ARG MAINAPPPATH=.
-			
-# Set working directory inside the container
+    PYTHONPATH="/app" \
+    PORT=80
+
+# Set environment variables
+# ENV PYTHONDONTWRITEBYTECODE=1 \
+#     PYTHONUNBUFFERED=1 \
+#     PORT=80
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
 WORKDIR /app
-			
+
 # Copy requirements to leverage Docker cache
 COPY "${MAINAPPPATH}/requirements.txt" "${MAINAPPPATH}/requirements.txt"
 			
 # Install dependencies without caching
 RUN pip install --no-cache-dir -r "${MAINAPPPATH}/requirements.txt"
-			
-# Copy entire application into container
-COPY . .
-			
-# Set working directory to main app path
-WORKDIR "/app/${MAINAPPPATH}"
-			
-# Define the container's startup command
-ENTRYPOINT ["python3", "main.py"]
+
+# Create a non-root user
+RUN useradd -m mcpuser && chown -R mcpuser:mcpuser /app
+USER mcpuser
+
+# Required environment variables (these should be set when running the container)
+# ENV QUIX_TOKEN="" \
+#     QUIX_BASE_URL="" \
+#     QUIX_WORKSPACE=""
+
+# Command to run the server
+CMD ["python", "main.py", "--host", "0.0.0.0", "--port", "80"]
