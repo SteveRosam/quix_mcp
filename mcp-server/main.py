@@ -956,7 +956,7 @@ def create_starlette_app(mcp_server: Server, *, debug: bool = False) -> Starlett
             headers = {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods": "POST, OPTIONS",
-                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Headers": "Content-Type, X-Session-ID",
             }
             return Response(status_code=200, headers=headers)
 
