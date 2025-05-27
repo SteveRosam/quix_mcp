@@ -6,12 +6,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
     PYTHONIOENCODING=UTF-8 \
     PYTHONPATH="/app" \
-    PORT=80
-
-# Set environment variables
-# ENV PYTHONDONTWRITEBYTECODE=1 \
-#     PYTHONUNBUFFERED=1 \
-#     PORT=80
+    PORT=80 \
+    MAINAPPPATH="/app"
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -22,19 +18,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 # Copy requirements to leverage Docker cache
-COPY "${MAINAPPPATH}/requirements.txt" "${MAINAPPPATH}/requirements.txt"
-			
+COPY requirements.txt "${MAINAPPPATH}/requirements.txt"
+            
 # Install dependencies without caching
 RUN pip install --no-cache-dir -r "${MAINAPPPATH}/requirements.txt"
+
+# Copy the rest of the application
+COPY . "${MAINAPPPATH}/"
 
 # Create a non-root user
 RUN useradd -m mcpuser && chown -R mcpuser:mcpuser /app
 USER mcpuser
 
 # Required environment variables (these should be set when running the container)
-# ENV QUIX_TOKEN="" \
-#     QUIX_BASE_URL="" \
-#     QUIX_WORKSPACE=""
+ENV Quix__Sdk__Token="" \
+    Quix__Portal__Api="" \
+    Quix__Workspace__Id=""
 
 # Command to run the server
 CMD ["python", "main.py", "--host", "0.0.0.0", "--port", "80"]
