@@ -995,7 +995,7 @@ if __name__ == "__main__":
         exit(1)
     
     host = "0.0.0.0"
-    port = "80"
+    port = 80
 
     # Bind SSE request handling to MCP server
     mcp_server = mcp._mcp_server
