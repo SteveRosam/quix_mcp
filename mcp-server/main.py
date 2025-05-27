@@ -947,12 +947,27 @@ def create_starlette_app(mcp_server: Server, *, debug: bool = False) -> Starlett
                 mcp_server.create_initialization_options(),
             )
 
+    async def handle_messages(request: Request):
+        if request.method != "POST":
+            from starlette.responses import JSONResponse
+            return JSONResponse({"error": "Method not allowed"}, status_code=405)
+        
+        try:
+            body = await request.json()
+        except ValueError:
+            from starlette.responses import JSONResponse
+            return JSONResponse({"error": "Invalid JSON"}, status_code=400)
+            
+        # Process the message through the SSE transport
+        response = await sse.handle_post_message(request.scope, request.receive, request._send)
+        return response
+
     return Starlette(
         debug=debug,
         routes=[
             Route("/", endpoint=root, methods=["GET"]),
-            Route("/sse", endpoint=handle_sse),
-            Mount("/messages/", app=sse.handle_post_message),
+            Route("/sse", endpoint=handle_sse, methods=["GET"]),
+            Route("/messages/", endpoint=handle_messages, methods=["POST"]),
         ],
     )
 
