@@ -1001,9 +1001,9 @@ if __name__ == "__main__":
     mcp_server = mcp._mcp_server
     starlette_app = create_starlette_app(mcp_server, debug=True)
     
-    logger.info(f"Starting Quix Applications MCP server on {args.host}:{args.port}")
+    logger.info(f"Starting Quix Applications MCP server on {host}:{port}")
     logger.info(f"Using Quix Portal at {os.environ.get('Quix__Portal__Api')}")
     logger.info(f"Using Quix Workspace {os.environ.get('Quix__Workspace__Id')}")
     
-    logger.info(f"Starting uvicorn server on {args.host}:{args.port} using {starlette_app}")
+    logger.info(f"Starting uvicorn server on {host}:{port} using {starlette_app}")
     uvicorn.run(starlette_app, host=host, port=port)
