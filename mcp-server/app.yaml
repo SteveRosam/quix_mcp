@@ -1,5 +1,10 @@
 name: MCP Server
 language: python
+variables:
+  - name: pat_token
+    inputType: Secret
+    multiline: false
+    defaultValue: pat_token
 dockerfile: dockerfile
 runEntryPoint: main.py
 defaultFile: main.py
