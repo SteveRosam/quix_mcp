@@ -102,7 +102,9 @@ async def make_quix_request(
             if not response.content:
                 return None
             
-            return response.json()
+            rj = response.json()
+            print(rj)
+            return rj
     except httpx.HTTPStatusError as e:
         error_info = f"HTTP error {e.response.status_code}"
         try:
