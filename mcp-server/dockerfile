@@ -36,4 +36,5 @@ COPY . "${MAINAPPPATH}/"
 #     Quix__Workspace__Id=""
 
 # Command to run the server
-CMD ["python", "quix_server_application.py", "--quix_token", "${pat_token}", "--quix_workspace", "${Quix__Workspace__Id}"]
+# CMD ["python", "quix_server_application.py", "--quix_token", "${pat_token}", "--quix_workspace", "${Quix__Workspace__Id}"]
+CMD python quix_server_application.py --quix_token "${pat_token}" --quix_workspace "${Quix__Workspace__Id}"
