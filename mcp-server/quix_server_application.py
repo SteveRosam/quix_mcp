@@ -108,9 +108,11 @@ async def make_quix_request(
                 print("return None")
                 return None
             
-            print("before rj = response.json()")
+            print("before response")
             print(response)
+            print("before response.text")
             print(response.text)
+            print("before rj = response.json()")
             rj = response.json()
             print(rj)
             return rj
