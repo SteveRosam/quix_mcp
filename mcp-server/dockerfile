@@ -36,4 +36,4 @@ ENV Quix__Sdk__Token="" \
     Quix__Workspace__Id=""
 
 # Command to run the server
-CMD ["python", "main.py"]
+CMD ["python", "quix_server_application.py"]
