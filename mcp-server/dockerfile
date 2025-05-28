@@ -27,4 +27,4 @@ RUN pip install --no-cache-dir -r "${MAINAPPPATH}/requirements.txt"
 COPY . "${MAINAPPPATH}/"
 
 # Command to run the server
-CMD python main.py --quix-token "${pat_token}" --quix-workspace "${Quix__Workspace__Id}" --quix-base-url "${Quix__Portal__Api}"
+CMD python main.py --quix-token "${pat_token}" --quix-workspace "${Quix__Workspace__Id}" --quix-base-url "${Quix__Portal__Api}" --port 80
