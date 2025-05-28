@@ -944,64 +944,122 @@ def create_starlette_app(mcp_server: Server, *, debug: bool = False) -> Starlett
         ],
     )
 
-if __name__ == "__main__":
-    import argparse
+def load_config():
+    """Load configuration with the following priority:
+    1. Default values
+    2. Environment variables
+    3. .env file
+    4. Command line arguments
+    """
+    # Default values
+    config = {
+        'host': '0.0.0.0',
+        'port': 9000,
+        'quix_token': None,
+        'quix_base_url': "https://portal.platform.quix.io/",
+        'quix_workspace': None,
+    }
     
-    token = os.environ["pat_token"]
-
-    # Load environment variables from .env file if it exists
+    # Load from environment variables (overrides defaults)
+    config.update({
+        'host': os.environ.get('HOST', config['host']),
+        'port': int(os.environ.get('PORT', str(config['port']))),
+        'quix_token': os.environ.get('QUIX_TOKEN'),
+        'quix_base_url': os.environ.get('QUIX_BASE_URL', config['quix_base_url']),
+        'quix_workspace': os.environ.get('QUIX_WORKSPACE'),
+    })
+    
+    # Load from .env file if it exists (overrides environment variables)
     env_path = Path('.env')
     if env_path.exists():
-        dotenv.load_dotenv(env_path)
+        dotenv.load_dotenv(env_path, override=True)
         logger.info("Loaded environment variables from .env file")
+        
+        # Update config with values from .env
+        config.update({
+            'host': os.environ.get('HOST', config['host']),
+            'port': int(os.environ.get('PORT', str(config['port']))),
+            'quix_token': os.environ.get('QUIX_TOKEN', config['quix_token']),
+            'quix_base_url': os.environ.get('QUIX_BASE_URL', config['quix_base_url']),
+            'quix_workspace': os.environ.get('QUIX_WORKSPACE', config['quix_workspace']),
+        })
     
+    # Parse command line arguments (highest priority)
     parser = argparse.ArgumentParser(description='Run Quix Applications MCP SSE-based server')
-    parser.add_argument('--host', default='0.0.0.0', help='Host to bind to')
-    parser.add_argument('--port', type=int, default=80, help='Port to listen on')
-    parser.add_argument('--quix-token', help='Quix Personal Access Token (PAT)', default=token)
-    parser.add_argument('--quix-base-url', help='Quix Portal Base URL (e.g., https://portal-myenv.platform.quix.io/)', default="https://portal-api.demo.quix.io/")
-    parser.add_argument('--quix-workspace', help='Quix Workspace ID', default="demo-quixmcp-prod")
-    parser.add_argument('--env-file', help='Path to .env file (default: .env in current directory)')
+    parser.add_argument('--host', default=config['host'], help='Host to bind to')
+    parser.add_argument('--port', type=int, default=config['port'], help='Port to listen on')
+    parser.add_argument('--quix-token', default=config['quix_token'], 
+                       help='Quix Personal Access Token (PAT). Can also use QUIX_TOKEN environment variable.')
+    parser.add_argument('--quix-base-url', default=config['quix_base_url'], 
+                       help='Quix Portal Base URL (e.g., https://portal-myenv.platform.quix.io/). Can also use QUIX_BASE_URL environment variable.')
+    parser.add_argument('--quix-workspace', default=config['quix_workspace'], 
+                       help='Quix Workspace ID. Can also use QUIX_WORKSPACE environment variable.')
+    parser.add_argument('--env-file', help='Path to custom .env file')
+    
     args = parser.parse_args()
     
-    # Load from specific env file if provided
+    # Load from custom .env file if specified (overrides all previous)
     if args.env_file:
         env_path = Path(args.env_file)
         if env_path.exists():
-            dotenv.load_dotenv(env_path)
+            dotenv.load_dotenv(env_path, override=True)
             logger.info(f"Loaded environment variables from {args.env_file}")
+            
+            # Update config with values from custom .env
+            config.update({
+                'host': os.environ.get('HOST', config['host']),
+                'port': int(os.environ.get('PORT', str(config['port']))),
+                'quix_token': os.environ.get('QUIX_TOKEN', config['quix_token']),
+                'quix_base_url': os.environ.get('QUIX_BASE_URL', config['quix_base_url']),
+                'quix_workspace': os.environ.get('QUIX_WORKSPACE', config['quix_workspace']),
+            })
         else:
             logger.warning(f"Environment file {args.env_file} not found")
     
-    # Set environment variables if provided via arguments (overrides .env)
-    if args.quix_token:
-        os.environ['QUIX_TOKEN'] = args.quix_token
+    # Update config with command line arguments (highest priority)
+    config.update({
+        'host': args.host,
+        'port': args.port,
+        'quix_token': args.quix_token if args.quix_token is not None else config['quix_token'],
+        'quix_base_url': args.quix_base_url if args.quix_base_url is not None else config['quix_base_url'],
+        'quix_workspace': args.quix_workspace if args.quix_workspace is not None else config['quix_workspace'],
+    })
     
-    if args.quix_base_url:
-        os.environ['QUIX_BASE_URL'] = args.quix_base_url
-        
-    if args.quix_workspace:
-        os.environ['QUIX_WORKSPACE'] = args.quix_workspace
+    # Validate required values
+    required = {
+        'quix_token': 'QUIX_TOKEN',
+        'quix_base_url': 'QUIX_BASE_URL',
+        'quix_workspace': 'QUIX_WORKSPACE'
+    }
     
-    # Check if required environment variables are set
-    if not os.environ.get('QUIX_TOKEN'):
-        logger.error("QUIX_TOKEN environment variable is required. Please set it with --quix-token or in your .env file")
+    missing = [name for name, env_var in required.items() if not config[name]]
+    if missing:
+        for name in missing:
+            logger.error(f"{required[name]} is required. Please set it via command line, .env file, or environment variable")
         exit(1)
     
-    if not os.environ.get('QUIX_BASE_URL'):
-        logger.error("QUIX_BASE_URL environment variable is required. Please set it with --quix-base-url or in your .env file")
-        exit(1)
-        
-    if not os.environ.get('QUIX_WORKSPACE'):
-        logger.error("QUIX_WORKSPACE environment variable is required. Please set it with --quix-workspace or in your .env file")
-        exit(1)
+    return config
+
+if __name__ == "__main__":
+    import argparse
     
-    # Bind SSE request handling to MCP server
+    # Load configuration with proper priority
+    config = load_config()
+    
+    # Set environment variables for backward compatibility
+    if config['quix_token']:
+        os.environ['QUIX_TOKEN'] = config['quix_token']
+    if config['quix_base_url']:
+        os.environ['QUIX_BASE_URL'] = config['quix_base_url']
+    if config['quix_workspace']:
+        os.environ['QUIX_WORKSPACE'] = config['quix_workspace']
+    
+    # Initialize and start the server
     mcp_server = mcp._mcp_server
     starlette_app = create_starlette_app(mcp_server, debug=True)
     
-    logger.info(f"Starting Quix Applications MCP server on {args.host}:{args.port}")
-    logger.info(f"Using Quix Portal at {os.environ.get('QUIX_BASE_URL')}")
-    logger.info(f"Using Quix Workspace {os.environ.get('QUIX_WORKSPACE')}")
+    logger.info(f"Starting Quix Applications MCP server on {config['host']}:{config['port']}")
+    logger.info(f"Using Quix Portal at {config['quix_base_url']}")
+    logger.info(f"Using Quix Workspace {config['quix_workspace']}")
     
-    uvicorn.run(starlette_app, host=args.host, port=args.port)
+    uvicorn.run(starlette_app, host=config['host'], port=config['port'])
