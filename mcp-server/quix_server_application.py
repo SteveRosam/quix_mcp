@@ -1043,7 +1043,7 @@ def load_config():
         exit(1)
     
     if config["quix_base_url"] == "https://portal.platform.quix.io/":
-        logger.warn(f"You are using the default Quix API URL of {config["quix_base_url"]}. If you are getting errors, check to see if this is the correct URL for you.")
+        logger.warn(f"You are using the default Quix API URL of {config['quix_base_url']}. If you are getting errors, check to see if this is the correct URL for you.")
 
     return config
 
