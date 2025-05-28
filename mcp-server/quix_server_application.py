@@ -44,7 +44,6 @@ async def make_quix_request(
     base_url = os.environ.get("QUIX_BASE_URL")
     workspace_id = os.environ.get("QUIX_WORKSPACE")
     
-    print("checking...")
     if not token:
         raise QuixApiError("Missing QUIX_TOKEN environment variable. Please set your Quix Personal Access Token.")
     
@@ -62,8 +61,6 @@ async def make_quix_request(
     if not base_url.endswith('/'):
         base_url = f"{base_url}/"
     
-    print("ok!")
-
 
     # Set default headers
     request_headers = {
@@ -83,13 +80,8 @@ async def make_quix_request(
     logger.debug(f"Params: {params}")
     
     url = f"{base_url}{path}"
-    
-    print(url)
-    print(request_headers)
 
     try:
-        print("before async with httpx.AsyncClient() as client:")
-
         async with httpx.AsyncClient() as client:
             response = await client.request(
                 method=method,
@@ -100,24 +92,14 @@ async def make_quix_request(
                 timeout=30.0
             )
             
-            print("before response.raise_for_status()")
             response.raise_for_status()
-            print("after response.raise_for_status()")
             
             # Handle empty responses
-            print("before if not response.content:")
             if not response.content:
-                print("return None")
                 return None
             
-            print("before response")
-            print(response)
-            print("before response.text")
-            print(response.text)
-            print("before rj = response.json()")
-            rj = response.json()
-            print(rj)
-            return rj
+            return response.json()
+
     except httpx.HTTPStatusError as e:
         error_info = f"HTTP error {e.response.status_code}"
         try:
@@ -1060,6 +1042,9 @@ def load_config():
             logger.error(f"{required[name]} is required. Please set it via command line, .env file, or environment variable")
         exit(1)
     
+    if config["quix_base_url"] == "https://portal.platform.quix.io/":
+        logger.warn(f"You are using the default Quix API URL of {config["quix_base_url"]}. If you are getting errors, check to see if this is the correct URL for you.")
+
     return config
 
 if __name__ == "__main__":
