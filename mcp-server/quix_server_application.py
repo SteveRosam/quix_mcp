@@ -42,6 +42,7 @@ async def make_quix_request(
     base_url = os.environ.get("QUIX_BASE_URL")
     workspace_id = os.environ.get("QUIX_WORKSPACE")
     
+    print("checking...")
     if not token:
         raise QuixApiError("Missing QUIX_TOKEN environment variable. Please set your Quix Personal Access Token.")
     
@@ -59,6 +60,9 @@ async def make_quix_request(
     if not base_url.endswith('/'):
         base_url = f"{base_url}/"
     
+    print("ok!")
+
+
     # Set default headers
     request_headers = {
         "Authorization": f"bearer {token}",
@@ -78,6 +82,9 @@ async def make_quix_request(
     
     url = f"{base_url}{path}"
     
+    print(url)
+    print(request_headers)
+
     try:
         async with httpx.AsyncClient() as client:
             response = await client.request(
