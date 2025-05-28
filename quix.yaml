@@ -369,6 +369,10 @@ deployments:
     publicAccess:
       enabled: true
       urlPrefix: mcpserver
+    variables:
+      - name: pat_token
+        inputType: Secret
+        secretKey: pat_token
 
 # This section describes the Topics of the data pipeline
 topics:
