@@ -86,6 +86,8 @@ async def make_quix_request(
     print(request_headers)
 
     try:
+        print("before async with httpx.AsyncClient() as client:")
+
         async with httpx.AsyncClient() as client:
             response = await client.request(
                 method=method,
@@ -96,12 +98,17 @@ async def make_quix_request(
                 timeout=30.0
             )
             
+            print("before response.raise_for_status()")
             response.raise_for_status()
+            print("after response.raise_for_status()")
             
             # Handle empty responses
+            print("before if not response.content:")
             if not response.content:
+                print("return None")
                 return None
             
+            print("before rj = response.json()")
             rj = response.json()
             print(rj)
             return rj
