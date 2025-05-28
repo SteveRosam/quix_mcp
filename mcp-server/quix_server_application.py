@@ -14,6 +14,8 @@ from mcp.server import Server
 import uvicorn
 import dotenv
 
+print(os.environ)
+
 # Initialize FastMCP server for Quix Applications
 mcp = FastMCP("quix_applications")
 
