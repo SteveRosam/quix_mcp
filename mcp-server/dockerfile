@@ -31,9 +31,9 @@ COPY . "${MAINAPPPATH}/"
 # USER mcpuser
 
 # Required environment variables (these should be set when running the container)
-ENV Quix__Sdk__Token="" \
-    Quix__Portal__Api="" \
-    Quix__Workspace__Id=""
+# ENV Quix__Sdk__Token="" \
+#     Quix__Portal__Api="" \
+#     Quix__Workspace__Id=""
 
 # Command to run the server
 CMD ["python", "quix_server_application.py"]
